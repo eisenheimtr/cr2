@@ -1,5 +1,5 @@
 import os
-import zipfile  # NEW: Added for zip functionality
+import zipfile  # Added for zip functionality
 from dotenv import load_dotenv
 
 # Load environment variables from .env file at the very beginning
@@ -18,10 +18,12 @@ from langchain_community.tools import WriteFileTool as LangchainWriteFileTool # 
 # Used for integrating with Composio for various app actions (e.g., GitHub).
 from composio_crewai import ComposioToolSet, App, Action
 
+# NEW: Import the 'tool' decorator directly from crewai.tools
 from crewai.tools import tool
 
 # --- CrewAI Tools Imports ---
 # These are the core tools from crewai_tools that will be instantiated.
+# Note: No need to import 'Tool' directly from crewai_tools if you use @tool decorator
 from crewai_tools import (
     CodeDocsSearchTool,
     CodeInterpreterTool,
@@ -44,11 +46,10 @@ from crewai_tools import (
     XMLSearchTool,
     YoutubeChannelSearchTool,
     YoutubeVideoSearchTool,
-     # NEW: Ensure Tool is imported for custom tools
 )
 
-# --- Custom Zip Functions (NEW) ---
-@tool ("zip_creator_tool")
+# --- Custom Zip Functions (Now directly recognized as tools via decorator) ---
+@tool("Zip Creator") # Changed the name for clarity in tool usage by agents
 def create_zip_archive_tool_function(source_path: str, output_zip_file: str) -> str:
     """
     Creates a zip archive from a file or folder.
@@ -78,8 +79,8 @@ def create_zip_archive_tool_function(source_path: str, output_zip_file: str) -> 
             return f"Error: Source path '{source_path}' does not exist or is not a file/directory."
     except Exception as e:
         return f"Error creating zip archive: {e}"
-        
-@tool ("zip_extractor_tool")
+
+@tool("Zip Extractor") # Changed the name for clarity in tool usage by agents
 def extract_zip_archive_tool_function(zip_file_path: str, extract_to_path: str) -> str:
     """
     Extracts all contents from a zip archive to a specified directory.
@@ -107,6 +108,7 @@ def extract_zip_archive_tool_function(zip_file_path: str, extract_to_path: str) 
 
 
 # --- Tool Instantiation ---
+# Most of these are fine as they are standard crewai_tools.
 
 # CodeDocsSearchTool: Requires a directory to search within.
 code_docs_search_tool = CodeDocsSearchTool(directory='./docs') # Ensure './docs' directory exists if used.
@@ -204,7 +206,7 @@ xml_search_tool = XMLSearchTool() # Can take file_path='./config.xml' if always 
 
 # Youtube Tools: For searching YouTube channels and videos.
 # Ensure YOUTUBE_API_KEY is set in your .env file if using the full API.
-youtube_api_key = os.getenv("YOUTUBE_API_KEY") # NEW: Get YouTube API key
+youtube_api_key = os.getenv("YOUTUBE_API_KEY") # Get YouTube API key
 
 # Agents will need to specify channel_id/video_id/search_query when using these tools.
 youtube_channel_search_tool = YoutubeChannelSearchTool(youtube_api_key=youtube_api_key) if youtube_api_key else YoutubeChannelSearchTool()
@@ -237,6 +239,6 @@ __all__ = [
     "xml_search_tool",
     "youtube_channel_search_tool",
     "youtube_video_search_tool",
-    "zip_creator_tool",   # NEW: Added zip creator tool
-    "zip_extractor_tool", # NEW: Added zip extractor tool
+    "create_zip_archive_tool_function",  # NEW: Reference the decorated function directly
+    "extract_zip_archive_tool_function", # NEW: Reference the decorated function directly
 ]
