@@ -20,7 +20,7 @@ from composio_crewai import ComposioToolSet, App, Action
 
 # --- CrewAI Tools Imports ---
 # These are the core tools from crewai_tools that will be instantiated.
-from crewai_tools import (
+from crewai.tools import (
     CodeDocsSearchTool,
     CodeInterpreterTool,
     CSVSearchTool,
@@ -46,6 +46,7 @@ from crewai_tools import (
 )
 
 # --- Custom Zip Functions (NEW) ---
+@tool
 def create_zip_archive_tool_function(source_path: str, output_zip_file: str) -> str:
     """
     Creates a zip archive from a file or folder.
@@ -75,7 +76,8 @@ def create_zip_archive_tool_function(source_path: str, output_zip_file: str) -> 
             return f"Error: Source path '{source_path}' does not exist or is not a file/directory."
     except Exception as e:
         return f"Error creating zip archive: {e}"
-
+        
+@tool
 def extract_zip_archive_tool_function(zip_file_path: str, extract_to_path: str) -> str:
     """
     Extracts all contents from a zip archive to a specified directory.
