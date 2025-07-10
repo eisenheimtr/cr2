@@ -4,4 +4,4 @@ libxslt1-dev
 build-essential
 rustc
 cargo
-sqlite3 >= 3.35.0
+sqlite3
