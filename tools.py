@@ -18,6 +18,8 @@ from langchain_community.tools import WriteFileTool as LangchainWriteFileTool # 
 # Used for integrating with Composio for various app actions (e.g., GitHub).
 from composio_crewai import ComposioToolSet, App, Action
 
+from crewai.tools import tool
+
 # --- CrewAI Tools Imports ---
 # These are the core tools from crewai_tools that will be instantiated.
 from crewai_tools import (
@@ -42,7 +44,7 @@ from crewai_tools import (
     XMLSearchTool,
     YoutubeChannelSearchTool,
     YoutubeVideoSearchTool,
-    Tool # NEW: Ensure Tool is imported for custom tools
+     # NEW: Ensure Tool is imported for custom tools
 )
 
 # --- Custom Zip Functions (NEW) ---
