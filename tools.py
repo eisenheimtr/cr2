@@ -22,6 +22,7 @@ from composio_crewai import ComposioToolSet, App, Action
 # --- CrewAI Tools Imports ---
 # These are the core tools from crewai_tools that will be instantiated.
 from crewai_tools import (
+    CodeDocsSearchTool,
     CodeInterpreterTool,
     CSVSearchTool,
     EXASearchTool,
@@ -50,7 +51,7 @@ from crewai_tools import (
 # If it's a custom tool, ensure its definition is present.
 # If it's from another library, add the appropriate import statement.
 # For now, it's commented out to prevent errors.
-# code_docs_search_tool = CodeDocsSearchTool(directory='./docs')
+code_docs_search_tool = CodeDocsSearchTool(directory='./docs')
 
 # Code Interpreter Tool: Allows agents to execute and interpret code.
 code_interpreter_tool = CodeInterpreterTool()
@@ -60,7 +61,7 @@ code_interpreter_tool = CodeInterpreterTool()
 composio_key = os.getenv("COMPOSIO_API_KEY")
 if not composio_key:
     raise ValueError("COMPOSIO_API_KEY is missing in .env file. Please set it.")
-composio_toolset = ComposioToolSet(api_key=composio_key)
+composio_toolset = ComposioToolSet()
 # Get specific tools from Composio, e.g., GitHub actions.
 composio_tools = composio_toolset.get_tools(apps=[App.GITHUB])
 
