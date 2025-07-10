@@ -20,7 +20,7 @@ from composio_crewai import ComposioToolSet, App, Action
 
 # --- CrewAI Tools Imports ---
 # These are the core tools from crewai_tools that will be instantiated.
-from crewai.tools import (
+from crewai_tools import (
     CodeDocsSearchTool,
     CodeInterpreterTool,
     CSVSearchTool,
