@@ -137,7 +137,8 @@ st.title("🧠 Auto Website Builder with CrewAI")
 
 prompt = st.text_input("Enter your website idea or prompt", placeholder="e.g. A landing page for a smart fitness mirror")
 
-uploaded_file = st.file_uploader("Upload your design or data file (CSV, TXT, etc.)", type=["csv", "txt", "pdf"])
+# MODIFIED: Added 'zip' to the accepted file types for drag and drop
+uploaded_file = st.file_uploader("Upload your design or data file (CSV, TXT, PDF, ZIP)", type=["csv", "txt", "pdf", "zip"])
 if uploaded_file is not None:
     os.makedirs("uploads", exist_ok=True)
     file_path = os.path.join("uploads", uploaded_file.name)
@@ -152,9 +153,6 @@ if st.button("🚀 Run AI Website Builder"):
         st.write("Running CrewAI Agents... Please wait.")
 
         # === TASKS ===
-        # Add a placeholder for the generated HTML if needed, or let the developer agent handle it
-        # For now, let's assume the developer agent will write directly to the expected path.
-
         tasks = [
             Task(
                 description=f"Analyze the prompt: '{prompt}' and use Web Search to find related products and trends. Summarize them into a brand brief.",
@@ -188,25 +186,19 @@ if st.button("🚀 Run AI Website Builder"):
         st.success("Website generation process completed!")
         st.text_area("CrewAI Process Summary Output", value=result, height=300)
 
-        # Create autosite folder - this should be done *before* the agent writes to it, or be robust.
-        # It's better to ensure it exists before the agent tries to write.
         os.makedirs("autosite", exist_ok=True)
 
-        # Check if index.html was actually created by the agent
         generated_html_path = "autosite/index.html"
         if os.path.exists(generated_html_path) and os.path.getsize(generated_html_path) > 0:
             st.success(f"Generated HTML found at {generated_html_path}")
-            # Instead of writing a placeholder, read the content the agent generated
             with open(generated_html_path, "r") as f:
                 st.code(f.read(), language="html") # Display the generated HTML
         else:
             st.warning(f"No HTML file found or it's empty at {generated_html_path}. The developer agent might not have saved it correctly.")
-            # Fallback to a placeholder if the agent failed to write
             with open(generated_html_path, "w") as f:
                 f.write("<html><body><h1>Generated Website (Placeholder)</h1><p>The AI agent did not produce the expected HTML output.</p></body></html>")
 
 
-        # Zip the folder (this zips the *actual* generated index.html or the placeholder for download)
         zip_filename = "autosite_package.zip"
         with zipfile.ZipFile(zip_filename, 'w') as zipf:
             for root, _, files in os.walk("autosite"):
@@ -217,7 +209,7 @@ if st.button("🚀 Run AI Website Builder"):
         with open(zip_filename, "rb") as zip_file:
             st.download_button("📦 Download Website ZIP", data=zip_file, file_name=zip_filename, mime="application/zip")
 
-# --- NEW: UI for Direct Zip/Unzip Functionality ---
+# --- UI for Direct Zip/Unzip Functionality (Existing Section) ---
 st.markdown("---")
 st.header("🗜️ Direct Zip/Unzip Operations")
 
