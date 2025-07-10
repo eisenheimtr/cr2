@@ -51,8 +51,8 @@ from tools import (
     xml_search_tool,
     youtube_channel_search_tool,
     youtube_video_search_tool,
-    create_zip_archive_tool_function,   # UPDATED: Import the function directly
-    extract_zip_archive_tool_function    # UPDATED: Import the function directly
+    create_zip_archive_tool_function,   # Import the function directly
+    extract_zip_archive_tool_function    # Import the function directly
 )
 
 # Consolidate all tools into a list for agents
@@ -79,8 +79,8 @@ tools = [
     xml_search_tool,
     youtube_channel_search_tool,
     youtube_video_search_tool,
-    create_zip_archive_tool_function,   # UPDATED: Add the function to the list
-    extract_zip_archive_tool_function   # UPDATED: Add the function to the list
+    create_zip_archive_tool_function,   # Add the function to the list
+    extract_zip_archive_tool_function   # Add the function to the list
 ]
 
 # Ensure OPENAI_API_KEY is set in your environment
@@ -216,3 +216,35 @@ if st.button("🚀 Run AI Website Builder"):
 
         with open(zip_filename, "rb") as zip_file:
             st.download_button("📦 Download Website ZIP", data=zip_file, file_name=zip_filename, mime="application/zip")
+
+# --- NEW: UI for Direct Zip/Unzip Functionality ---
+st.markdown("---")
+st.header("🗜️ Direct Zip/Unzip Operations")
+
+st.subheader("Create Zip Archive")
+create_source_path = st.text_input("Path to file/directory to zip (e.g., 'my_folder' or 'my_file.txt')", key="create_source_path")
+create_output_zip_file = st.text_input("Desired output .zip file path (e.g., 'output/my_archive.zip')", key="create_output_zip_file")
+
+if st.button("Create Zip"):
+    if create_source_path and create_output_zip_file:
+        zip_result = create_zip_archive_tool_function(create_source_path, create_output_zip_file)
+        if "Error" in zip_result:
+            st.error(zip_result)
+        else:
+            st.success(zip_result)
+    else:
+        st.warning("Please provide both source path and output zip file path.")
+
+st.subheader("Extract Zip Archive")
+extract_zip_file_path = st.text_input("Path to .zip file to extract (e.g., 'my_archive.zip')", key="extract_zip_file_path")
+extract_to_path = st.text_input("Directory to extract contents to (e.g., 'extracted_files')", key="extract_to_path")
+
+if st.button("Extract Zip"):
+    if extract_zip_file_path and extract_to_path:
+        unzip_result = extract_zip_archive_tool_function(extract_zip_file_path, extract_to_path)
+        if "Error" in unzip_result:
+            st.error(unzip_result)
+        else:
+            st.success(unzip_result)
+    else:
+        st.warning("Please provide both zip file path and extraction directory.")
