@@ -1,5 +1,6 @@
 crewai
-crewai-tools
+crewai_tools
+
 composio-crewai
 streamlit
 langchain
@@ -27,5 +28,7 @@ beautifulsoup4
 readability-lxml
 youtube-search-python
 google-api-python-client
+
+crewai[tools]
 
 
