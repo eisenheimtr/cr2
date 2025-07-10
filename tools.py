@@ -48,7 +48,7 @@ from crewai_tools import (
 )
 
 # --- Custom Zip Functions (NEW) ---
-@tool
+@tool ("zip_creator_tool")
 def create_zip_archive_tool_function(source_path: str, output_zip_file: str) -> str:
     """
     Creates a zip archive from a file or folder.
@@ -79,7 +79,7 @@ def create_zip_archive_tool_function(source_path: str, output_zip_file: str) -> 
     except Exception as e:
         return f"Error creating zip archive: {e}"
         
-@tool
+@tool ("zip_extractor_tool")
 def extract_zip_archive_tool_function(zip_file_path: str, extract_to_path: str) -> str:
     """
     Extracts all contents from a zip archive to a specified directory.
@@ -210,18 +210,6 @@ youtube_api_key = os.getenv("YOUTUBE_API_KEY") # NEW: Get YouTube API key
 youtube_channel_search_tool = YoutubeChannelSearchTool(youtube_api_key=youtube_api_key) if youtube_api_key else YoutubeChannelSearchTool()
 youtube_video_search_tool = YoutubeVideoSearchTool(youtube_api_key=youtube_api_key) if youtube_api_key else YoutubeVideoSearchTool()
 
-# NEW: Custom Zip Tools
-zip_creator_tool = Tool(
-    name="Zip Creator",
-    func=create_zip_archive_tool_function,
-    description="Useful for creating a zip archive from a specified file or directory. Takes `source_path` (string, path to file/directory) and `output_zip_file` (string, desired output .zip path) as arguments. Returns success/failure message.",
-)
-
-zip_extractor_tool = Tool(
-    name="Zip Extractor",
-    func=extract_zip_archive_tool_function,
-    description="Useful for extracting all contents from a zip archive to a specified directory. Takes `zip_file_path` (string, path to the .zip file) and `extract_to_path` (string, directory to extract to) as arguments. Returns success/failure message.",
-)
 
 # --- Exporting Tools ---
 # The __all__ list defines what gets imported when someone does 'from tools import *'
