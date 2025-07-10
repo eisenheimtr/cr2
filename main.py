@@ -51,8 +51,8 @@ from tools import (
     xml_search_tool,
     youtube_channel_search_tool,
     youtube_video_search_tool,
-    zip_creator_tool,   # ADDED: Zip Creator Tool
-    zip_extractor_tool  # ADDED: Zip Extractor Tool
+    create_zip_archive_tool_function,   # UPDATED: Import the function directly
+    extract_zip_archive_tool_function    # UPDATED: Import the function directly
 )
 
 # Consolidate all tools into a list for agents
@@ -79,8 +79,8 @@ tools = [
     xml_search_tool,
     youtube_channel_search_tool,
     youtube_video_search_tool,
-    zip_creator_tool,   # ADDED: Zip Creator Tool to the list
-    zip_extractor_tool  # ADDED: Zip Extractor Tool to the list
+    create_zip_archive_tool_function,   # UPDATED: Add the function to the list
+    extract_zip_archive_tool_function   # UPDATED: Add the function to the list
 ]
 
 # Ensure OPENAI_API_KEY is set in your environment
