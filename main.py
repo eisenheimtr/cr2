@@ -7,7 +7,7 @@ from crewai import Agent, Task, Crew
 from langchain_openai import ChatOpenAI # Use langchain_openai for newer versions
 # Make sure to import the wrapped tools
 from tools import (
-code_docs_search_tool,
+code_docs_search_tool, # Ensure this is defined in your tools.py
 code_interpreter_tool,
 composio_tools,  # Use   *composio_toolss instead of   *composio_tools
 csv_search_tool,
