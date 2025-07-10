@@ -116,7 +116,7 @@ copywriter_agent = Agent(
 
 developer_agent = Agent(
     role="Frontend Coder",
-    goal="Build clean, responsive HTML/CSS code from design and content, and *save the final code to 'autosite/index.html' using the file_write_tool*.", # Emphasize saving
+    goal="Build clean, responsive HTML/CSS code from design and content, and *save the final code to 'autosite/index.html' using the 'Write File Tool'*. Ensure it's a complete, well-formed HTML document.", # Emphasize saving
     backstory="Can go from wireframe to production code",
     tools=tools, # Pass the comprehensive tools list
     llm=llm,
@@ -208,35 +208,3 @@ if st.button("🚀 Run AI Website Builder"):
 
         with open(zip_filename, "rb") as zip_file:
             st.download_button("📦 Download Website ZIP", data=zip_file, file_name=zip_filename, mime="application/zip")
-
-# --- UI for Direct Zip/Unzip Functionality (Existing Section) ---
-st.markdown("---")
-st.header("🗜️ Direct Zip/Unzip Operations")
-
-st.subheader("Create Zip Archive")
-create_source_path = st.text_input("Path to file/directory to zip (e.g., 'my_folder' or 'my_file.txt')", key="create_source_path")
-create_output_zip_file = st.text_input("Desired output .zip file path (e.g., 'output/my_archive.zip')", key="create_output_zip_file")
-
-if st.button("Create Zip"):
-    if create_source_path and create_output_zip_file:
-        zip_result = create_zip_archive_tool_function(create_source_path, create_output_zip_file)
-        if "Error" in zip_result:
-            st.error(zip_result)
-        else:
-            st.success(zip_result)
-    else:
-        st.warning("Please provide both source path and output zip file path.")
-
-st.subheader("Extract Zip Archive")
-extract_zip_file_path = st.text_input("Path to .zip file to extract (e.g., 'my_archive.zip')", key="extract_zip_file_path")
-extract_to_path = st.text_input("Directory to extract contents to (e.g., 'extracted_files')", key="extract_to_path")
-
-if st.button("Extract Zip"):
-    if extract_zip_file_path and extract_to_path:
-        unzip_result = extract_zip_archive_tool_function(extract_zip_file_path, extract_to_path)
-        if "Error" in unzip_result:
-            st.error(unzip_result)
-        else:
-            st.success(unzip_result)
-    else:
-        st.warning("Please provide both zip file path and extraction directory.")
