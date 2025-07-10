@@ -1,25 +1,6 @@
-# System dependencies required by some Python packages for full functionality.
-# Each package name should be on a new line.
-
-# Required for PDF processing (e.g., by 'unstructured' or other PDF parsers)
-# Provides tools like pdftotext, pdfinfo, etc.
 poppler-utils
-
-# Required for building 'lxml' (a dependency of 'readability-lxml')
-# These provide XML and XSLT parsing capabilities.
 libxml2-dev
 libxslt1-dev
-
-# General build tools often needed for compiling Python packages with C/C++/Rust extensions
-# (e.g., for 'tiktoken', 'tokenizers', 'chromadb' which might use 'hnswlib').
 build-essential
-
-# Required for compiling Python packages that have Rust extensions (e.g., 'tiktoken', 'tokenizers').
-# These packages provide the Rust compiler (rustc) and package manager (cargo).
 rustc
 cargo
-
-# Optional: If 'unstructured' is used for OCR (Optical Character Recognition) on images
-# or scanned PDFs, you might need Tesseract OCR.
-# tesseract-ocr
-# tesseract-ocr-eng # English language pack for Tesseract
