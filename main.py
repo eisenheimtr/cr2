@@ -1,8 +1,29 @@
+import sys
+
+# This section ensures that 'pysqlite3' is used whenever 'sqlite3' is imported.
+# This is crucial for libraries like ChromaDB that might default to the built-in sqlite3,
+# which is too old on your system.
+try:
+    __import__("pysqlite3")
+    sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
+except ImportError:
+    # If pysqlite3-binary somehow isn't available, fall back to the standard sqlite3.
+    # (Note: if this happens, ChromaDB will likely still fail due to old version).
+    pass
+
+import streamlit as st
+# -------------------------------------------------------------------------
+# Your other imports and main application code will go AFTER this block.
+# For example:
+# from crewai import Agent, Task, Crew
+# from langchain_community.document_loaders import TextLoader
+# import chromadb
+# ... etc.
+
 import os
 from dotenv import load_dotenv
 load_dotenv()
 import zipfile
-import streamlit as st
 from crewai import Agent, Task, Crew
 from langchain_openai import ChatOpenAI # Use langchain_openai for newer versions
 # Make sure to import the wrapped tools
