@@ -15,7 +15,6 @@ import streamlit as st
 # -------------------------------------------------------------------------
 # Your other imports and main application code will go AFTER this block.
 # For example:
-# from crewai import Agent, Task, Crew
 # from langchain_community.document_loaders import TextLoader
 # import chromadb
 # ... etc.
@@ -23,39 +22,16 @@ import streamlit as st
 import os
 from dotenv import load_dotenv
 load_dotenv()
-import zipfile
+import zipfile # Keep this import as it's used for the download button functionality
+
 from crewai import Agent, Task, Crew
 from langchain_openai import ChatOpenAI # Use langchain_openai for newer versions
-# Make sure to import the wrapped tools
-from tools import (
-code_docs_search_tool, # Ensure this is defined in your tools.py
-code_interpreter_tool,
-composio_tools,  # Use   *composio_toolss instead of   *composio_tools
-csv_search_tool,
-exa_search_tool,
-file_read_tool,
-firecrawl_search_tool,
-firecrawl_crawl_website_tool,
-firecrawl_scrape_website_tool,
-github_search_tool,
-serper_dev_tool,
-txt_search_tool,
-json_search_tool,
-mdx_search_tool,
-pdf_search_tool,
-rag_tool,
-scrape_element_from_website_tool,
-scrape_website_tool,
-website_search_tool,
-xml_search_tool,
-youtube_channel_search_tool,
-youtube_video_search_tool
-)
 
-tools = [
-    code_docs_search_tool,
+# Make sure to import the wrapped tools, including the new zip tools
+from tools import (
+    code_docs_search_tool, # Ensure this is defined in your tools.py
     code_interpreter_tool,
-    *composio_tools, 
+    composio_tools,
     csv_search_tool,
     exa_search_tool,
     file_read_tool,
@@ -74,8 +50,39 @@ tools = [
     website_search_tool,
     xml_search_tool,
     youtube_channel_search_tool,
-    youtube_video_search_tool
-]   
+    youtube_video_search_tool,
+    zip_creator_tool,   # ADDED: Zip Creator Tool
+    zip_extractor_tool  # ADDED: Zip Extractor Tool
+)
+
+# Consolidate all tools into a list for agents
+tools = [
+    code_docs_search_tool,
+    code_interpreter_tool,
+    *composio_tools, # Unpack composio_tools if it returns a list of tools
+    csv_search_tool,
+    exa_search_tool,
+    file_read_tool,
+    firecrawl_search_tool,
+    firecrawl_crawl_website_tool,
+    firecrawl_scrape_website_tool,
+    github_search_tool,
+    serper_dev_tool,
+    txt_search_tool,
+    json_search_tool,
+    mdx_search_tool,
+    pdf_search_tool,
+    rag_tool,
+    scrape_element_from_website_tool,
+    scrape_website_tool,
+    website_search_tool,
+    xml_search_tool,
+    youtube_channel_search_tool,
+    youtube_video_search_tool,
+    zip_creator_tool,   # ADDED: Zip Creator Tool to the list
+    zip_extractor_tool  # ADDED: Zip Extractor Tool to the list
+]
+
 # Ensure OPENAI_API_KEY is set in your environment
 llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0.7) # Use gpt-3.5-turbo
 
@@ -84,8 +91,7 @@ briefing_agent = Agent(
     role="Creative Strategist",
     goal="Understand product intent and search for relevant competitors",
     backstory="Knows how to position a brand for impact",
-    tools=tools,
-    
+    tools=tools, # Pass the comprehensive tools list
     llm=llm,
     verbose=True
 )
@@ -94,8 +100,7 @@ designer_agent = Agent(
     role="Web Designer",
     goal="Define structure, layout, and visual tokens",
     backstory="Expert at UX and turning ideas into screens",
-    tools=tools,
-    
+    tools=tools, # Pass the comprehensive tools list
     llm=llm,
     verbose=True
 )
@@ -104,8 +109,7 @@ copywriter_agent = Agent(
     role="Content Marketer",
     goal="Write copy with real-world context and references",
     backstory="Ties writing to live content and user needs",
-    tools=tools,
-    
+    tools=tools, # Pass the comprehensive tools list
     llm=llm,
     verbose=True
 )
@@ -114,8 +118,7 @@ developer_agent = Agent(
     role="Frontend Coder",
     goal="Build clean, responsive HTML/CSS code from design and content, and *save the final code to 'autosite/index.html' using the file_write_tool*.", # Emphasize saving
     backstory="Can go from wireframe to production code",
-    tools=tools,
-    
+    tools=tools, # Pass the comprehensive tools list
     llm=llm,
     verbose=True
 )
@@ -124,8 +127,7 @@ analyst_agent = Agent(
     role="SQL Analyst",
     goal="Retrieve key structured info about customers or product behavior",
     backstory="Data-first decision maker",
-    tools=tools,
-    
+    tools=tools, # Pass the comprehensive tools list
     llm=llm,
     verbose=True
 )
@@ -173,7 +175,6 @@ if st.button("🚀 Run AI Website Builder"):
                 description="Use layout, copy, and design tokens provided by previous agents to write clean, responsive HTML/CSS code for a full homepage. **Crucially, save this complete HTML/CSS code directly to a file named 'index.html' within the 'autosite/' directory using the 'Write File Tool'.** Ensure it's a complete, well-formed HTML document.",
                 expected_output="Complete and syntactically correct HTML + CSS saved as 'autosite/index.html'.",
                 agent=developer_agent,
-                 
             ),
             Task(
                 description="Query user_feedback table and summarize most common feature requests and complaints.",
@@ -202,10 +203,10 @@ if st.button("🚀 Run AI Website Builder"):
             st.warning(f"No HTML file found or it's empty at {generated_html_path}. The developer agent might not have saved it correctly.")
             # Fallback to a placeholder if the agent failed to write
             with open(generated_html_path, "w") as f:
-                 f.write("<html><body><h1>Generated Website (Placeholder)</h1><p>The AI agent did not produce the expected HTML output.</p></body></html>")
+                f.write("<html><body><h1>Generated Website (Placeholder)</h1><p>The AI agent did not produce the expected HTML output.</p></body></html>")
 
 
-        # Zip the folder (now this will zip the *actual* generated index.html or the placeholder)
+        # Zip the folder (this zips the *actual* generated index.html or the placeholder for download)
         zip_filename = "autosite_package.zip"
         with zipfile.ZipFile(zip_filename, 'w') as zipf:
             for root, _, files in os.walk("autosite"):
