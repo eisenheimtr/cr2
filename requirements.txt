@@ -30,5 +30,6 @@ youtube-search-python
 google-api-python-client
 pysqlite3-binary
 crewai[tools]
+exa_py
 
 
